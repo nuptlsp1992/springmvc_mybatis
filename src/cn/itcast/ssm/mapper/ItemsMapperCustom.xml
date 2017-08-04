@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.ssm.mapper.ItemsMapperCustom" >
+<!-- 定义商品查询的sql片段 -->
+<sql id="query_items_where">
+<!-- 商品查询条件通过ItemsQueryVo包装类对象的itemsCustom属性来传递 -->
+	<if test="itemsCustom!=null">
+		<if test='itemsCustom.name != null and itemsCustom.name != " "'>
+				items.name like '%${itemsCustom.name}%'
+		</if>	
+	</if>
+
+</sql>
+	<select id="findItemsList" parameterType="cn.itcast.ssm.po.ItemsQueryVo" resultType="cn.itcast.ssm.po.ItemsCustom">
+		select * from Items 
+		<where>
+			<include refid="query_items_where"></include>
+		</where>
+	</select> 
+     <delete id="deleteItems" parameterType="java.lang.Integer" >
+          delete from items 
+          <where>
+               id in
+               <foreach collection="items_id" item="item" index="index" open="(" separator="," close=")">
+                           #{item}
+               </foreach>
+          </where>
+     </delete>                                                                                                                              
+</mapper>
